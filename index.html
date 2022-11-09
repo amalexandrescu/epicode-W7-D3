@@ -10,13 +10,65 @@
       integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="./style.css" />
 
     <script src="./script.js" defer></script>
     <title>Book Shop</title>
   </head>
   <body>
     <div class="container">
-      <!-- we'll display the books here as cards -->
+      <h2>All the books from the shop</h2>
+
+      <!-- input Search -->
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search books"
+          aria-label="Recipient's username"
+          aria-describedby="button-addon2"
+        />
+        <div class="input-group-append">
+          <button
+            class="btn btn-outline-secondary bg-primary text-light"
+            type="button"
+            id="button-addon2"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+
+      <!-- cart button -->
+      <div class="dropdown">
+        <button
+          id="cart-button"
+          class="btn btn-secondary dropdown-toggle mb-3"
+          type="button"
+          data-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Cart
+        </button>
+        <div class="dropdown-menu">
+          <div id="initial-container">
+            <a
+              class="dropdown-item text-center bg-info font-weight-bold"
+              href="#"
+            >
+            </a>
+            <div class="d-flex justify-content-center" style="width: 100%">
+              <button id="empty" type="button" class="btn btn-warning my-3">
+                Empty cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row text-center">
+        <!-- we'll display the books here as cards -->
+      </div>
     </div>
     <script
       src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
