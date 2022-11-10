@@ -3,18 +3,26 @@ const url = "https://striveschool-api.herokuapp.com/books";
 function createCard(book) {
   const parentToAppend = document.querySelector(".row");
   // parentToAppend.innerHTML = "";
-  parentToAppend.innerHTML += `<div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-  <div class="card">
-  <img src= ${book.img} class="card-img-top" alt="...">
-  <div class="card-body d-flex flex-column justify-content-between">
-  <h5 class="card-title">${book.title}</h5>
-    <div class="button-container">
-    <a href="#" class="btn btn-primary mb-2">Add to Cart</a>
-    <a href="#" class="btn btn-primary">Skip</a>
+  parentToAppend.innerHTML += `
+  <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+    <div class="card">
+    <img src= ${book.img} class="card-img-top" alt="...">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <h5 class="card-title">${book.title}</h5>
+        <div class="button-container">
+          <a href="#" class="btn btn-primary mb-2">Add to Cart</a>
+          <a href="#" class="btn btn-primary">Skip</a>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>`;
+  `;
+
+  // const [addToCartButton, skipButton] = parentToAppend
+  //   .querySelectorAll(".button-container a")
+  //   .splice(-2);
+  // addToCartButton.addEventListener("click", () => addToCart(book));
+  // skipButton.addEventListener("click", () => skipBook(book));
 }
 
 function addEventListenersToCartRemoveButtons() {
@@ -93,9 +101,7 @@ cartButton.addEventListener("click", () => {
   for (product of theCart) {
     divParent.innerHTML += `
     <div class="title-container">
-    <a class="dropdown-item text-center" href="#">
-      ${product}
-    </a>
+    <a class="dropdown-item text-center" href="#">${product}</a>
     <div class="d-flex justify-content-center" style="width:100%">
     <button type="button" class="remove btn btn-danger my-3">Remove</button>
     </div>
@@ -114,6 +120,24 @@ function removeCard() {
   skipButtonList.forEach((btn) => {
     btn.addEventListener("click", () => {
       const currentCard = btn.closest(".card");
+      console.log(currentCard.querySelector("h5").innerText);
+      if (theCart.length > 0) {
+        const cart = document.querySelector(".dropdown-menu");
+        const cartContainersList = cart.querySelectorAll(".title-container");
+        cartContainersList.forEach((el) => {
+          if (
+            el.querySelector("a:first-child").innerText ===
+            currentCard.querySelector("h5").innerText
+          ) {
+            let index = theCart.indexOf(
+              currentCard.querySelector("h5").innerText
+            );
+            theCart.splice(index, 1);
+            el.remove();
+          }
+        });
+      }
+
       const cardContainerToRemove = currentCard.parentElement;
       cardContainerToRemove.remove();
     });
