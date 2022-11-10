@@ -17,38 +17,47 @@ function createCard(book) {
 </div>`;
 }
 
-function removeButtons() {
+function addEventListenersToCartRemoveButtons() {
   let removeButtonList = document.querySelectorAll(".remove");
   removeButtonList.forEach((btn) => {
     btn.addEventListener("click", () => {
-      console.log("clicked");
       const titleToRemove = btn.closest("div.title-container");
+      console.log(titleToRemove);
       const theTitle = titleToRemove.querySelector("a");
-      theCart.splice(theTitle.innerText, 1);
+      titleText = theTitle.innerText;
+      let index = theCart.indexOf(titleText);
+      theCart.splice(index, 1);
       titleToRemove.remove();
       const cardsList = document.querySelectorAll(".card");
+      console.log(cardsList);
       cardsList.forEach((el) => {
-        if (el.querySelector("h5").innerText === theTitle.innerText)
+        if (el.querySelector("h5").innerText === titleText) {
           el.classList.remove("added-to-cart");
-        el.querySelector(
-          ".card-body div.button-container a:first-child"
-        ).innerText = "Add to Cart";
+          el.querySelector(
+            ".card-body div.button-container a:first-child"
+          ).innerText = "Add to Cart";
+          el.querySelector(
+            ".card-body div.button-container a:first-child"
+          ).classList.add("bg-primary");
+          el.querySelector(
+            ".card-body div.button-container a:first-child"
+          ).classList.remove("bg-info");
+        }
       });
     });
   });
 }
 
-// emptyCartButton
+// emptyCartButton;
 function empty() {
-  const emptyCartButton = document.querySelector("#empty");
-  // console.log(emptyCartButton);
+  const emptyCartButton = document.getElementById("empty");
+
   emptyCartButton.addEventListener("click", () => {
     const divsToRemove = document.querySelectorAll(
       "div.dropdown div.title-container"
     );
     console.log(divsToRemove);
-    for (let el of divsToRemove) console.log(el);
-    el.remove();
+
     divsToRemove.forEach((el) => {
       console.log(el);
       el.remove();
@@ -56,22 +65,31 @@ function empty() {
     const cardsList = document.querySelectorAll(".card");
     cardsList.forEach((el) => {
       el.classList.remove("added-to-cart");
+      let addButton = el.querySelector("div.button-container a:first-child");
+      addButton.innerText = "Add to Cart";
+      addButton.classList.remove("bg-info");
+      addButton.classList.add("bg-primary");
     });
     theCart = [];
   });
 }
 
 const cartButton = document.querySelector("#cart-button");
-cartButton.addEventListener("click", removeButtons);
-cartButton.addEventListener("click", empty);
 
 cartButton.addEventListener("click", () => {
   const divParent = document.querySelector(".dropdown-menu");
-  const initialContainer = document.querySelector(
-    "#initial-container a:first-child"
-  );
-  initialContainer.innerText = `${theCart.length} books in the cart`;
-  divParent.innerHTML = "";
+  // divParent.innerHTML = "";
+  divParent.innerHTML = `<div id="initial-container">
+  <a class="dropdown-item text-center bg-info font-weight-bold" href="#">
+  ${theCart.length}
+  </a>
+  <div class="d-flex justify-content-center" style="width: 100%">
+    <button id="empty" type="button" class="btn btn-warning my-3">
+      Empty cart
+    </button>
+  </div>
+</div>`;
+
   for (product of theCart) {
     divParent.innerHTML += `
     <div class="title-container">
@@ -83,6 +101,10 @@ cartButton.addEventListener("click", () => {
     </div>
     </div>`;
   }
+
+  addEventListenersToCartRemoveButtons();
+
+  empty();
 });
 
 function removeCard() {
@@ -110,8 +132,8 @@ function addCard() {
       currentCard.classList.add("added-to-cart");
       btn.innerText = "Added";
       btn.classList.add("d-block");
-      btn.classList.remove("btn-primary");
-      btn.classList.add("btn-info");
+      btn.classList.remove("bg-primary");
+      btn.classList.add("bg-info");
       currentTitle = currentCard.querySelector("h5");
       if (!theCart.includes(currentTitle.innerText))
         theCart.push(currentTitle.innerText);
@@ -133,16 +155,22 @@ const getTitles = async () => {
   const inputField = document.querySelector(".input-group input");
 
   inputField.addEventListener("input", () => {
+    let arrayOfInputCards = [];
     if (inputField.value.length >= 3) {
       // console.log(inputField.value);
       result.filter((el) => {
         if (
           el.title.toLowerCase().includes(`${inputField.value}`.toLowerCase())
         ) {
-          const parentToAppend = document.querySelector(".row");
-          parentToAppend.innerHTML = "";
-          createCard(el);
+          arrayOfInputCards.push(el);
         }
+      });
+    }
+    if (arrayOfInputCards.length) {
+      const parentToAppend = document.querySelector(".row");
+      parentToAppend.innerHTML = "";
+      arrayOfInputCards.forEach((el) => {
+        createCard(el);
       });
     } else {
       const parentToAppend = document.querySelector(".row");
